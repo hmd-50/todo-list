@@ -14,7 +14,10 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import IconButton from "@mui/material/IconButton";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 
-export default function Todo() {
+export default function Todo({ TodoPrm, handleCheck }) {
+  function shandleCheckClick() {
+    handleCheck(TodoPrm.id);
+  }
   return (
     <div>
       <Card
@@ -28,9 +31,15 @@ export default function Todo() {
       >
         <CardContent>
           <Grid container spacing={2}>
-            <Grid sx={{ textAlign: "right" }} size={8}>
-              <Typography variant="h5" style={{fontWeight:800}}> المهمة الاولى </Typography>
-              <Typography variant="h6" sx={{fontWeight:400}}> تفاصيل المهمة الاولى </Typography>
+            <Grid sx={{ textAlign: "right" }} size={7}>
+              <Typography variant="h5" style={{ fontWeight: 800 }}>
+                {" "}
+                {TodoPrm.title}{" "}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 400 }}>
+                {" "}
+                {TodoPrm.details}{" "}
+              </Typography>
             </Grid>
             <Grid
               xs={4}
@@ -39,11 +48,14 @@ export default function Todo() {
               alignItems="center"
             >
               <IconButton
+                onClick={() => {
+                  shandleCheckClick();
+                }}
                 className="iconButton"
                 aria-label="delete"
                 style={{
-                  color: "#8bc34a",
-                  background: "white",
+                  color: TodoPrm.isCompleted ? "white" : "#8bc34a",
+                  background: TodoPrm.isCompleted ? "#8bc34a" : "white",
                   border: "solid #8bc34a 3px",
                   margin: "0 5px",
                 }}
