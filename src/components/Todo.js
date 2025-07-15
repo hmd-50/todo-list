@@ -25,10 +25,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import TextField from '@mui/material/TextField';
 
 
-export default function Todo({ TodoPrm,cccdc }) {
+export default function Todo({ TodoPrm }) {
 const [ShowDeleteDialog,setShowDeleteDialog]=useState(false)//
+const [ShowEditDialog,setShowEditDialog]=useState(false)//
+const [newTitle, setNewTitle] = useState(TodoPrm.title);
+const [newDetails, setNewDetails] = useState(TodoPrm.details);
+
   const {todos,setTodos} = useContext(TodosContext)
 
 
@@ -42,6 +47,15 @@ const [ShowDeleteDialog,setShowDeleteDialog]=useState(false)//
         setTodos(updateTodo);
   }
 
+  function handleEditClick() {
+    setShowEditDialog(true);
+  }
+  
+  function handleReturnEditClick() {
+    setShowEditDialog(false);
+  }
+
+  
 function handleDeleteClick() {
   setShowDeleteDialog(true);
 }
@@ -49,6 +63,19 @@ function handleDeleteClick() {
 function handleReturnClick() {
   setShowDeleteDialog(false);
 }
+
+function handleSaveChanges() {
+  // تعديل المهمة
+  const updatedTodos = todos.map((todo) => {
+    if (todo.id === TodoPrm.id) {
+      return { ...todo, title: newTitle, details: newDetails };
+    }
+    return todo;
+  });
+  setTodos(updatedTodos);
+  setShowEditDialog(false);
+}
+
 
 function handleDeleteConfirm(){
   const updateTodo = todos.filter((t)=> {
@@ -68,7 +95,7 @@ setTodos(updateTodo);
     <div>
             <Dialog sx={{direction:"rtl"}}
             onClose={handleReturnClick}//يستدعي الفنكشن اذا ضغطت في اي محل برا الرسالة او الابوب بب
-        open={ShowDeleteDialog}
+        open={ShowDeleteDialog}//الخانه هنا ترو او فولس اذا ترو الابوب بب يطلع و اذا فولس يختفي
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -88,6 +115,51 @@ setTodos(updateTodo);
           </Button>
         </DialogActions>
       </Dialog>
+
+
+
+
+
+      <Dialog sx={{direction:"rtl"}} open={ShowEditDialog} onClose={handleReturnEditClick}>
+
+        <DialogTitle>{` تعديل (${TodoPrm.title}) `}</DialogTitle>
+        <DialogContent sx={{ paddingBottom: 0 }}>
+               <DialogContent>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="title"
+            label="العنوان"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            margin="dense"
+            id="details"
+            label="وصف إضافي"
+            value={newDetails}
+            onChange={(e) => setNewDetails(e.target.value)}
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+
+
+            <DialogActions>
+              <Button  onClick={handleReturnEditClick}>أغلاق</Button>
+              {/*  <Button type="submit">هل انت متأكد من حفظ التعديلات</Button>*/}
+             <Button onClick={handleSaveChanges} autoFocus>حفظ التعديلات</Button>
+
+            </DialogActions>
+        </DialogContent>
+      </Dialog>
+
+      
+
+
 
       <Card
         className="todoCard"
@@ -141,6 +213,7 @@ setTodos(updateTodo);
                   border: "solid #1769aa 3px",
                   margin: "0 5px",
                 }}
+                onClick={handleEditClick}
               >
                 <ModeEditOutlineOutlinedIcon />
               </IconButton>

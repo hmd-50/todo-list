@@ -32,7 +32,9 @@ export default function TodoList() {
       details: "",
       isCompleted: false,
     };
+    const updatedTodos = [...todos, newTodo];
     setTodos([...todos, newTodo]);
+    localStorage.setItem("todosStorage", JSON.stringify(updatedTodos));
     setTitleInput("");
   }
   return (
