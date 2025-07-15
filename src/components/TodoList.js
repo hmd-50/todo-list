@@ -11,67 +11,30 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Todo from "./Todo";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { v4 as uuidv4 } from 'uuid';
 import { useState } from "react";
-
-
-
-
-
-
-
-const initialTodos = [
-  {
-    id: uuidv4(),
-    title: "قراءة كتاب",
-    details: "1111",
-    isCompleted: false,
-  },{
-    id: uuidv4(),
-    title: "كتابة كتاب",
-    details: "222",
-    isCompleted: false,
-  },{
-    id: uuidv4(),
-    title: "قراءة وكتابة كتاب",
-    details: "3333",
-    isCompleted: false,
-  },
-];
+import { useContext } from "react";
+import { TodosContext } from "../context/todosContext";
+import { v4 as uuidv4 } from "uuid";
 
 export default function TodoList() {
-  const [alignment, setAlignment] = React.useState("الكل");
+  const { todos, setTodos } = useContext(TodosContext);
 
-  const handleChange = (event, newAlignment) => {
-    setAlignment(newAlignment);
-  };
-const [todos, setTodos]= useState(initialTodos)
-const [titleInput,setTitleInput] = useState("");
+  const [titleInput, setTitleInput] = useState("");
 
-function phandleCheckClick(todoId) {
-    const updateTodo = todos.map((t)=> {
-      if(t.id == todoId){
-        t.isCompleted = !t.isCompleted;
-      }
-      return t;
-    });
-    setTodos(updateTodo);
-}
-
-  const todosmap = todos.map((t)=>{
-    return  <Todo key={t.id}  TodoPrm={t} handleCheck={phandleCheckClick}/>
+  const todosmap = todos.map((t) => {
+    return <Todo key={t.id} TodoPrm={t} />;
   });
 
- function handleAddClick() {
-  const newTodo = {
-    id: uuidv4(),
-    title:titleInput,
-    details:"",
-    isCompleted:false
-  };
-  setTodos([...todos,newTodo]);
-  setTitleInput("");
- }
+  function handleAddClick() {
+    const newTodo = {
+      id: uuidv4(),
+      title: titleInput,
+      details: "",
+      isCompleted: false,
+    };
+    setTodos([...todos, newTodo]);
+    setTitleInput("");
+  }
   return (
     <Container maxWidth="sm">
       <Card sx={{ minWidth: 275 }}>
@@ -95,9 +58,9 @@ function phandleCheckClick(todoId) {
             <ToggleButton value="ios">غير منجز</ToggleButton>
             <ToggleButton value="android">منجز</ToggleButton>
             <ToggleButton value="الكل">الكل</ToggleButton>
-         </ToggleButtonGroup>
-{todosmap}    
-    </CardContent>
+          </ToggleButtonGroup>
+          {todosmap}
+        </CardContent>
         <>
           <Grid container spacing={2}>
             <Grid
@@ -115,7 +78,7 @@ function phandleCheckClick(todoId) {
                 variant="outlined"
                 style={{ width: "100%" }}
                 value={titleInput}
-                onChange={(e)=> {
+                onChange={(e) => {
                   setTitleInput(e.target.value);
                 }}
               />
@@ -125,7 +88,7 @@ function phandleCheckClick(todoId) {
               <Button
                 className="endButton"
                 variant="outlined"
-              //  onClick={() => {
+                //  onClick={() => {
                 //  function handleAddClick(); }}
                 onClick={handleAddClick}
                 sx={{

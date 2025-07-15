@@ -9,17 +9,86 @@ import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+import { useContext,useState } from "react";
+import { TodosContext } from "../context/todosContext";
+
+
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 
-export default function Todo({ TodoPrm, handleCheck }) {
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+
+
+export default function Todo({ TodoPrm,cccdc }) {
+const [ShowDeleteDialog,setShowDeleteDialog]=useState(false)//
+  const {todos,setTodos} = useContext(TodosContext)
+
+
   function shandleCheckClick() {
-    handleCheck(TodoPrm.id);
+       const updateTodo = todos.map((t)=> {
+          if(t.id == TodoPrm.id){
+            t.isCompleted = !t.isCompleted;
+          }
+          return t;
+        });
+        setTodos(updateTodo);
   }
+
+function handleDeleteClick() {
+  setShowDeleteDialog(true);
+}
+
+function handleReturnClick() {
+  setShowDeleteDialog(false);
+}
+
+function handleDeleteConfirm(){
+  const updateTodo = todos.filter((t)=> {
+    if(t.id == TodoPrm.id){
+      return false;
+    }else{
+      return true;
+    }
+   // return t.id != TodoPrm.id <--السطر هنا له نفس المعنى الي في الاف الشرطية
+
+  });
+setTodos(updateTodo);
+
+}
+
   return (
     <div>
+            <Dialog sx={{direction:"rtl"}}
+            onClose={handleReturnClick}//يستدعي الفنكشن اذا ضغطت في اي محل برا الرسالة او الابوب بب
+        open={ShowDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {`هل انت متأكد من انك تريد حذف (${TodoPrm.title}) من مهامي`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            لا يمكنك التراجع عن الحذف بعد اتمامة.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleReturnClick}
+          >أغلاق</Button>
+          <Button  autoFocus onClick={handleDeleteConfirm}>
+            نعم، اريد الحذف
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Card
         className="todoCard"
         sx={{
@@ -85,6 +154,7 @@ export default function Todo({ TodoPrm, handleCheck }) {
                   border: "solid #b23c17 3px",
                   margin: "0 5px",
                 }}
+                onClick={handleDeleteClick}
               >
                 <DeleteOutlineOutlinedIcon />
               </IconButton>
