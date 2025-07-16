@@ -4,11 +4,6 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
-import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import DeleteIcon from "@mui/icons-material/Delete";
-
 import { useContext,useState } from "react";
 import { TodosContext } from "../context/todosContext";
 
@@ -45,6 +40,8 @@ const [newDetails, setNewDetails] = useState(TodoPrm.details);
           return t;
         });
         setTodos(updateTodo);
+        localStorage.setItem("todosStorage", JSON.stringify(updateTodo));
+
   }
 
   function handleEditClick() {
@@ -73,6 +70,7 @@ function handleSaveChanges() {
     return todo;
   });
   setTodos(updatedTodos);
+  localStorage.setItem("todosStorage", JSON.stringify(updatedTodos));
   setShowEditDialog(false);
 }
 
@@ -88,6 +86,8 @@ function handleDeleteConfirm(){
 
   });
 setTodos(updateTodo);
+localStorage.setItem("todosStorage", JSON.stringify(updateTodo));
+
 
 }
 

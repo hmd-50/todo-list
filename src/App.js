@@ -15,7 +15,7 @@ const theme = createTheme({
 });
 
 const initialTodos = [
-  {
+/*  {
     id: uuidv4(),
     title: "قراءة كتاب",
     details: "1111",
@@ -30,7 +30,7 @@ const initialTodos = [
     title: "قراءة وكتابة كتاب",
     details: "3333",
     isCompleted: false,
-  },
+  },*/
 ];
 
 
@@ -39,7 +39,7 @@ function App() {
   
   return (
     <ThemeProvider theme={theme}>
-    <div className="App" style={{display:"flex" , justifyContent:"center", alignItems:"center", height:"100vh" , backgroundColor:"black",direction:"rtl",fontFamily:"CustomFont1" }}>
+    <div className="App" style={{display:"flex" , justifyContent:"center", alignItems:"center", height:"100٪" , backgroundColor:"black",direction:"rtl",fontFamily:"CustomFont1" }}>
     <TodosContext.Provider value={{todos, setTodos}}>
     <TodoList/>
     </TodosContext.Provider>

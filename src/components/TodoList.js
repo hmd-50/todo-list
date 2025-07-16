@@ -1,6 +1,5 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -11,8 +10,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Todo from "./Todo";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { TodosContext } from "../context/todosContext";
 import { v4 as uuidv4 } from "uuid";
 
@@ -20,10 +18,40 @@ export default function TodoList() {
   const { todos, setTodos } = useContext(TodosContext);
 
   const [titleInput, setTitleInput] = useState("");
+  const [displayedTodosType, setdisplayedTodosType] = useState("all");
 
-  const todosmap = todos.map((t) => {
-    return <Todo key={t.id} TodoPrm={t} />;
+  const completedTodos = todos.filter((t) => {
+    return t.isCompleted;
   });
+
+  const notcompletedTodos = todos.filter((t) => {
+    return !t.isCompleted;
+  });
+
+  let todosToBeRendered = todos;
+
+  if (displayedTodosType == "completed") {
+    todosToBeRendered = completedTodos;
+  } else if (displayedTodosType == "non-completed") {
+    todosToBeRendered = notcompletedTodos;
+  } else {
+    todosToBeRendered = todos;
+  }
+  const todosmap =
+    todosToBeRendered && todosToBeRendered.length > 0 ? (
+      todosToBeRendered.map((t) => {
+        return <Todo key={t.id} TodoPrm={t} />;
+      })
+    ) : (
+      <Typography style={{ textAlign: "center", marginTop: "20px" }}>
+        لا توجد مهام لديك
+      </Typography>
+    );
+
+  useEffect(() => {
+    const storageTodos = JSON.parse(localStorage.getItem("todosStorage"));
+    setTodos(storageTodos);
+  }, []);
 
   function handleAddClick() {
     const newTodo = {
@@ -52,15 +80,16 @@ export default function TodoList() {
           <ToggleButtonGroup
             style={{ direction: "ltr", marginTop: "10px" }}
             color="primary"
-            // value={alignment}
+            value={displayedTodosType}
             exclusive
-            // onChange={handleChange}
+            onChange={(event, newValue) => setdisplayedTodosType(newValue)}
             aria-label="Platform"
           >
-            <ToggleButton value="ios">غير منجز</ToggleButton>
-            <ToggleButton value="android">منجز</ToggleButton>
-            <ToggleButton value="الكل">الكل</ToggleButton>
+            <ToggleButton value="non-completed">غير منجز</ToggleButton>
+            <ToggleButton value="completed">منجز</ToggleButton>
+            <ToggleButton value="all">الكل</ToggleButton>
           </ToggleButtonGroup>
+
           {todosmap}
         </CardContent>
         <>
